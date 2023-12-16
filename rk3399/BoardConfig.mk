@@ -1,0 +1,1 @@
+BoardConfig-rk3399-vivid-unit-v13.mk
