@@ -7,7 +7,7 @@ export RK_UBOOT_DEFCONFIG=vivid
 # RK_UBOOT_DEFCONFIG_FRAGMENT Have bugs
 #export RK_UBOOT_DEFCONFIG_FRAGMENT=vivid
 # Kernel defconfig
-export RK_KERNEL_DEFCONFIG=rockchip_vivid_linux_defconfig
+export RK_KERNEL_DEFCONFIG=vivid_unit_defconfig
 # Kernel dts
 export RK_KERNEL_DTS=rk3399-vivid-unit-v13
 # boot image type
