@@ -157,7 +157,7 @@ usage()
 	echo "debian             -build debian rootfs"
 	echo "pcba               -build pcba"
 	echo "recovery           -build recovery"
-	echo "all                -build uboot, kernel, rootfs, recovery image"
+	echo "all                -build uboot, kernel, rootfs, recovery, firmware, update image xzimg"
 	echo "cleanall           -clean uboot, kernel, rootfs, recovery"
 	echo "firmware           -pack all the image we need to boot up system"
 	echo "updateimg          -pack update image"
@@ -1314,6 +1314,9 @@ build_all()
 	build_kernel
 	build_rootfs
 	build_recovery
+	build_firmware
+	build_updateimg
+	build_xzimg
 
 	if [ "$RK_RAMDISK_SECURITY_BOOTUP" = "true" ];then
 		#note: if build spl, it will delete loader.bin in uboot directory,
@@ -1352,6 +1355,7 @@ build_updateimg()
 {
 	IMAGE_PATH=$TOP_DIR/rockdev
 	PACK_TOOL_DIR=$TOP_DIR/tools/linux/Linux_Pack_Firmware
+	DATE=$(date  +%Y%m%d)
 
 	cd $PACK_TOOL_DIR/rockdev
 
@@ -1364,7 +1368,10 @@ build_updateimg()
 		source_package_file_name=`ls -lh package-file | awk -F ' ' '{print $NF}'`
 		ln -fs "$RK_PACKAGE_FILE_AB" package-file
 		./mkupdate.sh
-		mv update.img $IMAGE_PATH/update_ab.img
+		if [ -f $IMAGE_PATH/prebuilt-* ]; then
+			rm $IMAGE_PATH/prebuilt-*;
+		fi
+		mv update.img $IMAGE_PATH/prebuilt-$RK_KERNEL_DTS-AB-$DATE.img
 		ln -fs $source_package_file_name package-file
 	else
 		echo "Make update.img"
@@ -1377,9 +1384,23 @@ build_updateimg()
 		else
 			./mkupdate.sh
 		fi
-		mv update.img $IMAGE_PATH
+		if [ -f $IMAGE_PATH/prebuilt-* ]; then
+			rm $IMAGE_PATH/prebuilt-*;
+		fi
+		mv update.img $IMAGE_PATH/prebuilt-$RK_KERNEL_DTS-$DATE.img
 	fi
 
+	finish_build
+}
+
+build_xzimg()
+{
+	IMAGE_PATH=$TOP_DIR/rockdev
+
+	cd $IMAGE_PATH
+	if [ -f prebuilt-*.img ]; then
+		xz -zk prebuilt-*.img
+	fi
 	finish_build
 }
 
@@ -1589,6 +1610,7 @@ for option in $POST_OPTIONS; do
 		cleanall) build_cleanall ;;
 		firmware) build_firmware ;;
 		updateimg) build_updateimg ;;
+		xzimg) build_xzimg ;;
 		otapackage) build_otapackage ;;
 		sdpackage) build_sdcard_package ;;
 		spl) build_spl ;;
