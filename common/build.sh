@@ -1368,7 +1368,7 @@ build_updateimg()
 		source_package_file_name=`ls -lh package-file | awk -F ' ' '{print $NF}'`
 		ln -fs "$RK_PACKAGE_FILE_AB" package-file
 		./mkupdate.sh
-		if [ -f $IMAGE_PATH/prebuilt-* ]; then
+		if [ -f $IMAGE_PATH/prebuilt-*.img ]; then
 			rm $IMAGE_PATH/prebuilt-*;
 		fi
 		mv update.img $IMAGE_PATH/prebuilt-$RK_KERNEL_DTS-AB-$DATE.img
@@ -1384,7 +1384,7 @@ build_updateimg()
 		else
 			./mkupdate.sh
 		fi
-		if [ -f $IMAGE_PATH/prebuilt-* ]; then
+		if [ -f $IMAGE_PATH/prebuilt-*.img ]; then
 			rm $IMAGE_PATH/prebuilt-*;
 		fi
 		mv update.img $IMAGE_PATH/prebuilt-$RK_KERNEL_DTS-$DATE.img
