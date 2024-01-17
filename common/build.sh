@@ -1312,6 +1312,13 @@ build_all()
 	check_security_condition
 	build_loader
 	build_kernel
+	# copy kernel dtb to uboot from build_kernel
+	# rebuilt uboot
+	if [ -z $RK_SPL_DEFCONFIG ]; then
+		build_uboot
+	else
+		build_spl
+	fi
 	build_rootfs
 	build_recovery
 	build_firmware
