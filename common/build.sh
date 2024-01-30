@@ -1378,7 +1378,7 @@ build_updateimg()
 		if [ -f $IMAGE_PATH/prebuilt-*.img ]; then
 			rm $IMAGE_PATH/prebuilt-*;
 		fi
-		mv update.img $IMAGE_PATH/prebuilt-$RK_KERNEL_DTS-AB-$DATE.img
+		mv update.img $IMAGE_PATH/$RK_KERNEL_DTS-debian11-AB-$DATE.img
 		ln -fs $source_package_file_name package-file
 	else
 		echo "Make update.img"
@@ -1394,7 +1394,7 @@ build_updateimg()
 		if [ -f $IMAGE_PATH/prebuilt-*.img ]; then
 			rm $IMAGE_PATH/prebuilt-*;
 		fi
-		mv update.img $IMAGE_PATH/prebuilt-$RK_KERNEL_DTS-$DATE.img
+		mv update.img $IMAGE_PATH/$RK_KERNEL_DTS-debian11-$DATE.img
 	fi
 
 	finish_build
