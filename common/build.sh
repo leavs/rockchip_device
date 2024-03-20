@@ -468,6 +468,37 @@ build_kernel()
 	# For uboot with dtb
 	cp kernel/arch/arm64/boot/dts/rockchip/${RK_KERNEL_DTS}.dtb u-boot/dts/kern.dtb
 
+	# Update the wifi modules
+	BCM=$TOP_DIR/kernel/drivers/net/wireless/rockchip_wlan/rkwifi/bcmdhd/bcmdhd.ko
+	DHD=$TOP_DIR/kernel/drivers/net/wireless/rockchip_wlan/rkwifi/bcmdhd/dhd_static_buf.ko
+	TEMPDIR=$(mktemp -d)
+
+	if [ ! -f $TOP_DIR/debian/linaro-rootfs.img ]; then
+		echo ""
+	        echo "Not found prebuilt rootfs, download it..."
+		echo ""
+	        mkdir $TOP_DIR/debian -p
+	        cd $TOP_DIR/debian
+	        wget -c https://www.vividunit.com/download/rootfs/rootfs-vivid-latest.img.xz
+		echo ""
+	        echo "decompress the rootfs..."
+		echo ""
+	        xz -d --threads=0 rootfs-vivid-latest.img.xz
+	        ln -sf rootfs-vivid-latest.img linaro-rootfs.img
+	        sync
+	        cd $TOP_DIR
+	fi
+
+	echo ""
+	echo "Update WiFi/Bt modules..."
+	echo $BCM
+	echo $DH
+	echo ""
+	sudo mount debian/linaro-rootfs.img $TEMPDIR
+	sudo cp $BCM $DHD $TEMPDIR/system/lib/modules/
+	sync
+	sudo umount $TEMPDIR
+
 	build_check_power_domain
 
 	finish_build
